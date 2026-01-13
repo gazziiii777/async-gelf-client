@@ -9,6 +9,7 @@ class AsyncGelfClient:
 
     Uses native asyncio for maximum performance without threads.
     Automatically compresses messages larger than 8KB (Graylog standard).
+    All blocking operations run in thread pool to avoid blocking event loop.
     """
 
     MAX_CHUNK_SIZE = 8192
@@ -35,11 +36,16 @@ class AsyncGelfClient:
             Exception: On send error (logged but doesn't interrupt execution)
         """
         try:
-            message_bytes = json.dumps(message).encode('utf-8')
+            # Serialize JSON in thread pool to avoid blocking
+            message_bytes = await asyncio.to_thread(
+                lambda: json.dumps(message).encode('utf-8')
+            )
 
+            # Compress in thread pool if message is large
             if len(message_bytes) > self.compress_threshold:
-                message_bytes = gzip.compress(message_bytes)
+                message_bytes = await asyncio.to_thread(gzip.compress, message_bytes)
 
+            # Create async UDP connection
             loop = asyncio.get_event_loop()
             transport, _ = await loop.create_datagram_endpoint(
                 lambda: asyncio.DatagramProtocol(),

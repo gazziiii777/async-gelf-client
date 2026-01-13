@@ -1,6 +1,6 @@
 # Async GELF Client
 
-Async UDP client for sending GELF messages to Graylog. Uses native asyncio for maximum performance and automatically compresses messages larger than 8KB.
+Fully async UDP client for sending GELF messages to Graylog. Uses native asyncio for maximum performance, automatically compresses messages larger than 8KB, and runs all blocking operations in thread pool to avoid blocking the event loop.
 
 ## Installation
 
@@ -28,11 +28,31 @@ async def main():
 asyncio.run(main())
 ```
 
+### Parallel sending (high performance)
+
+```python
+import asyncio
+from asyncgelf import AsyncGelfClient, GelfMessage
+
+async def main():
+    client = AsyncGelfClient(host="localhost", port=12201)
+    
+    # Send multiple messages in parallel without blocking
+    messages = [
+        GelfMessage.create(short_message=f"Message {i}", level=6, host="myapp")
+        for i in range(100)
+    ]
+    
+    await asyncio.gather(*[client.send(msg) for msg in messages])
+
+asyncio.run(main())
+```
+
 ## API
 
 ### AsyncGelfClient
 
-Async UDP client for sending GELF messages.
+Fully async UDP client for sending GELF messages. All blocking operations (JSON serialization, gzip compression) run in thread pool.
 
 **Parameters:**
 

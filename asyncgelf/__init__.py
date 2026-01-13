@@ -1,11 +1,12 @@
 """Async GELF Client - Async client for sending GELF messages to Graylog."""
 
-from .client import AsyncGelfUdpClient
-from .message import create_gelf_message, convert_python_log_level
+from .client import AsyncGelfClient
+from .message import GelfMessage, create_gelf_message, convert_python_log_level
 
 __version__ = "0.1.0"
 __all__ = [
-    "AsyncGelfUdpClient",
+    "AsyncGelfClient",
+    "GelfMessage",
     "create_gelf_message",
     "convert_python_log_level",
 ]

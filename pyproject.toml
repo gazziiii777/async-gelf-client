@@ -29,7 +29,7 @@ Homepage = "https://github.com/gazziiii777"
 Repository = "https://github.com/gazziiii777/async-gelf-client"
 
 [tool.setuptools]
-packages = ["async_gelf_client"]
+packages = ["asyncgelf"]
 
 [tool.setuptools.package-data]
 "*" = ["py.typed"]

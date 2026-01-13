@@ -4,18 +4,18 @@ import json
 from typing import Any
 
 
-class AsyncGelfUdpClient:
+class AsyncGelfClient:
     """Async UDP client for sending GELF messages to Graylog.
-    
+
     Uses native asyncio for maximum performance without threads.
     Automatically compresses messages larger than 8KB (Graylog standard).
     """
-    
+
     MAX_CHUNK_SIZE = 8192
 
     def __init__(self, host: str, port: int = 12201, compress_threshold: int = 8192) -> None:
         """Initialize GELF UDP client.
-        
+
         Args:
             host: Graylog server hostname or IP address
             port: UDP port (default: 12201)
@@ -27,10 +27,10 @@ class AsyncGelfUdpClient:
 
     async def send(self, message: dict[str, Any]) -> None:
         """Send GELF message to Graylog via UDP.
-        
+
         Args:
             message: GELF message dict with fields like version, host, short_message, etc.
-            
+
         Raises:
             Exception: On send error (logged but doesn't interrupt execution)
         """
@@ -53,4 +53,4 @@ class AsyncGelfUdpClient:
                 transport.close()
 
         except Exception as e:
-            print(f"[AsyncGelfUdpClient] Failed to send message: {e}")
+            print(f"[AsyncGelfClient] Failed to send message: {e}")

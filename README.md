@@ -12,12 +12,12 @@ pip install async-gelf-client
 
 ```python
 import asyncio
-from async_gelf_client import AsyncGelfUdpClient, create_gelf_message
+from asyncgelf import AsyncGelfClient, GelfMessage
 
 async def main():
-    client = AsyncGelfUdpClient(host="localhost", port=12201)
+    client = AsyncGelfClient(host="localhost", port=12201)
     
-    message = create_gelf_message(
+    message = GelfMessage.create(
         short_message="Hello Graylog",
         level=6,
         host="myapp"
@@ -30,7 +30,7 @@ asyncio.run(main())
 
 ## API
 
-### AsyncGelfUdpClient
+### AsyncGelfClient
 
 Async UDP client for sending GELF messages.
 
@@ -44,7 +44,13 @@ Async UDP client for sending GELF messages.
 
 - `async send(message: dict[str, Any]) -> None`: Sends GELF message
 
-### create_gelf_message
+### GelfMessage
+
+GELF message builder with static methods.
+
+**Methods:**
+
+#### `GelfMessage.create(...)`
 
 Creates a properly formatted GELF message.
 
@@ -59,7 +65,7 @@ Creates a properly formatted GELF message.
 
 **Returns:** dict with GELF message
 
-### convert_python_log_level
+#### `GelfMessage.convert_log_level(python_level)`
 
 Converts Python logging level to Syslog level for GELF.
 
